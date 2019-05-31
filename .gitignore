@@ -1,0 +1,17 @@
+# Python
+*.pyc
+*~
+__pycache__
+venv
+.idea/
+
+# Media
+dist/
+media/
+
+# System
+.DS_Store
+
+# Sonstiges
+extended
+Notizen
