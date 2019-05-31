@@ -33,7 +33,7 @@ def sane_file_extensions(files, extensions):
 def sane_file_naming_schema(files):
     """
     returns False for lists that contain file names, that don't match the scheme.
-    File names mustn't start with underscore.
+    File names mustn't start with underscore, that leads to a negative result.
     Time is optional, just omit _HH-MM-SS
 
     Scheme:  YYYY-MM-DD_HH-MM-SS_title.extension

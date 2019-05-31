@@ -31,3 +31,7 @@ class FileNamingTests(TestCase):
 
     def test_sane_file_naming_schema_more_underscores_no_problem(self):
         self.assertIs(sane_file_naming_schema(['2019-05-27_21-50-36_Sonnenuntergang in Petershausen_schön.jpg']), True)
+
+    def test_sane_file_naming_schema_startswith_underscore_negative(self):
+        self.assertIs(sane_file_naming_schema(['_2019-05-27_21-50-36_Sonnenuntergang in Petershausen_schön.jpg']),
+                      False)
