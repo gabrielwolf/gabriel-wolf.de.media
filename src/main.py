@@ -1,7 +1,19 @@
 import os
 from datetime import datetime
 
-media_files_directory = "../media"
+media_files_directory = "../media/"
+
+
+def read_dir(directory, hidden_files_prefixes):
+    """
+    returns a list of all non-hidden files in a given directory
+    :param directory: string
+    :param hidden_files_prefixes: tuple of strings
+    :return: list
+    """
+    files = os.listdir(directory)
+    files = [x for x in files if not x.startswith(hidden_files_prefixes)]
+    return files
 
 
 def dir_sane_file_extensions(directory, extensions):
@@ -53,7 +65,7 @@ def dir_sane_file_naming_schema(directory):
 def main():
     print("extensions: " + str(dir_sane_file_extensions(media_files_directory, [".txt", ".jpg", ".mp4", ".wav"])))
     print("schema: " + str(dir_sane_file_naming_schema(media_files_directory)))
-    print("test")
+    read_dir("../", (".", "_"))
 
 
 main()
