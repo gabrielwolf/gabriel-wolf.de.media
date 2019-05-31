@@ -26,6 +26,7 @@ def sane_file_extensions(files, extensions):
     for file in files:
         filename, extension = os.path.splitext(file)
         if extension not in extensions:
+            print("Invalid extension: " + file)
             return False
     return True
 
@@ -52,13 +53,13 @@ def sane_file_naming_schema(files):
             try:
                 test = datetime.strptime(parts[0], "%Y-%m-%d")  # valid date
             except ValueError:
-                print("Scheme not valid for file: ", file)
+                print("Invalid scheme:   ", file)
                 return False
         if len(parts) >= 3:
             try:
                 test = datetime.strptime(parts[1], "%H-%M-%S")
             except ValueError:
-                print("Scheme not valid for file: ", file)
+                print("Invalid scheme:   ", file)
                 return False
     return True
 
@@ -66,8 +67,8 @@ def sane_file_naming_schema(files):
 def main():
     extension_test = sane_file_extensions(read_dir(media_files_directory, (".", "_", "Makefile")), allowed_extensions)
     schema_test = sane_file_naming_schema(read_dir(media_files_directory, (".", "_", "Makefile")))
-    print("extensions: " + str(extension_test))
-    print("schema: " + str(schema_test))
+    if extension_test and schema_test:
+        print("Media directory is clean!")
 
 
 main()
