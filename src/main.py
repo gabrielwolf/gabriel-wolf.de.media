@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-media_files_directory = '../media'
+media_files_directory = "../media"
 
 
 def dir_sane_file_extensions(directory, extensions):
@@ -11,7 +11,7 @@ def dir_sane_file_extensions(directory, extensions):
     """
     files = os.listdir(directory)
     for file in files:
-        if not file.startswith('.'):
+        if not file.startswith("."):
             filename, extension = os.path.splitext(file)
             if extension not in extensions:
                 return False
@@ -30,20 +30,20 @@ def dir_sane_file_naming_schema(directory):
     """
     files = os.listdir(directory)
     for file in files:
-        if not file.startswith('.') and not file.startswith('_'):
+        if not file.startswith(".") and not file.startswith("_"):
             filename, extension = os.path.splitext(file)
-            parts = filename.split('_')
+            parts = filename.split("_")
             if len(parts) == 1:
                 return False
             if len(parts) == 2:
                 try:
-                    test = datetime.strptime(parts[0], '%Y-%m-%d')
+                    test = datetime.strptime(parts[0], "%Y-%m-%d")
                 except ValueError:
                     print("Scheme not valid for file: ", file)
                     return False
             if len(parts) == 3:
                 try:
-                    test = datetime.strptime(parts[1], '%H-%M-%S')
+                    test = datetime.strptime(parts[1], "%H-%M-%S")
                 except ValueError:
                     print("Scheme not valid for file: ", file)
                     return False
@@ -51,9 +51,9 @@ def dir_sane_file_naming_schema(directory):
 
 
 def main():
-    dir_sane_file_extensions(media_files_directory, ['.txt', '.jpg', '.mp4', '.wav'])
-    dir_sane_file_naming_schema(media_files_directory)
+    print("extensions: " + str(dir_sane_file_extensions(media_files_directory, [".txt", ".jpg", ".mp4", ".wav"])))
+    print("schema: " + str(dir_sane_file_naming_schema(media_files_directory)))
+    print("test")
 
 
-if __name__ == 'main':
-    main()
+main()
