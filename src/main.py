@@ -71,4 +71,5 @@ def main():
         print("Media directory is clean!")
 
 
-main()
+if __name__ == "__main__":
+    main()
