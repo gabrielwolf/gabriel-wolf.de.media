@@ -65,6 +65,31 @@ def sane_file_naming_schema(files):
     return True
 
 
+def write_json(files, json_file):
+    """
+    Writes a *.json when given a sane list of file names
+    :param files: list of sane file name strings
+    :param json_file_name: string
+    :return: True if file was written
+    """
+    media_objects_list = []
+    for file in files:
+        pass
+
+
+class Media(object):
+    def __init__(self, date, time, title, *args):
+        try:
+            self.date = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            print("Invalid date! ", date)
+        try:
+            self.time = datetime.strptime(time, "%H-%M-%S")
+        except ValueError:
+            print("Invalid time! ", time)
+        self.title = title
+
+
 def main():
     extension_test = sane_file_extensions(read_dir(media_files_directory, hidden_files_prefixes), allowed_extensions)
     schema_test = sane_file_naming_schema(read_dir(media_files_directory, hidden_files_prefixes))

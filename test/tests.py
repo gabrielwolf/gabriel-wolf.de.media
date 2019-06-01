@@ -3,14 +3,18 @@ from unittest import TestCase
 from src.main import sane_file_extensions, sane_file_naming_schema, Media
 
 
+def create_media_object(date, time, title):
+    Media(date, time, title)
+
+
 class MediaObjectTests(TestCase):
+
     def test_create_media_object_positive(self):
         print("--> ", self._testMethodName)
         self.assertTrue(Media("2019-06-02", "15-16-02", "Tagebuch"))
 
     def test_create_media_object_negative(self):
-        t = Media("2019-22-02", "15-16-02", "Tagebuch")
-        self.assertRaises(ValueError)
+        self.assertRaises(ValueError, create_media_object("2019-22-02", "15-16-02", "Tagebuch"))
 
 
 class FileNamingTests(TestCase):
