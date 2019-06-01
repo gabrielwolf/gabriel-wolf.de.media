@@ -109,12 +109,20 @@ class Media(object):
 
 def write_json(data, file_name):
     """
-    Writes an object to a json file
+    Serializes and writes an object to a json file
     :param data: list of dictionaries
     :param file_name: string
     :return: True if file was written
     """
-    json.dump(data, codecs.open(file_name, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+    try:
+        json.dump(data, codecs.open(file_name, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+        return True
+    except TypeError:
+        print("No valid JSON data!")
+        raise
+    except IOError:
+        print("Could not write file to disk!")
+        raise
 
 
 def main():
@@ -123,7 +131,7 @@ def main():
     valid_schema = sane_file_naming_schema(files)
     if valid_extensions and valid_schema:
         print("Media directory is clean!")
-        write_json(valid_schema, "./test.json")
+        write_json(valid_schema, "../dist/media_data.json")
 
 
 if __name__ == "__main__":
