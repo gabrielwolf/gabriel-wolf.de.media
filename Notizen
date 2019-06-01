@@ -1,0 +1,38 @@
+..:: Notizen ::..
+
+- gabriel-wolf.de.media
+    - beim einchecken von mediendateien muss folgendes passieren
+      - beim import werden alle erforderlichen alternativen gecodet
+        - foto (wird leicht nachgeschärft)
+          1. passende Größen erstellen (400px, 600px, 800px, 1000px, 1500px, 2000px, 2500px)
+             - jpg:                             convert -strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90 input.jpg input-400x.jpg
+             - webp (umweg über png nötig!):    convert -strip -geometry 400x -sharpen 0x0.9 input.jpg input-400.png
+                                                cwebp -q 90 -m 6 input-400x.png -o input-400x.webp
+
+               optionale vorschaubilder in low quality:   cwebp -q 1 -m 6 input-400.png -o input-preview.webp)
+               alles in einem verzeichnis:  find . -iname '*.png' | parallel 'cwebp -q 90 -m 6 {} -o {}.webp'
+
+          2. metadaten löschen
+             exiftool -all= input.jpg
+             for i in *.jpg; do echo "Processing $i"; exiftool -all= "$i"; done
+
+          3. Creative Commons Metadaten schreiben
+             exiftool -P -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Photographer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' input.jpg
+
+          4. aufräumen
+             rm *_original
+
+        - audio
+          aus dem wav mit dem tool `remetacator` logic hinweise rauslöschen
+          - mp3:    ffmpeg -i input.wav -codec:a libmp3lame -qscale:a 2 output.mp3
+          - ogg:    ffmpeg -i input.wav output.ogg
+          - flac:   ffmpeg -i input.wav output.flac
+
+        - video
+          - Platzhalter erzeugen:           ffmpeg -i input.mp4 -ss 00:00:00.200 -vframes 1 output.jpg
+                        datenreduzieren:    convert output.jpg -geometry 400x -quality 1 output.jpg
+          - webm:   ffmpeg -i input.mp4 -vcodec libvpx -b:v 5120k -c:a libvorbis -ac 2 -b:a 192k -ar 44100 output.webm
+          - ogg:    ffmpeg -i input.mp4 -c:v libtheora -c:a libvorbis -b:v 5120k -b:a 192k -ar 44100 output.ogg
+          - mp4:    ffmpeg -i input.mp4 -vcodec h264 -vb 5120k -acodec aac -ab 192k -pix_fmt yuv420p output.mp4
+
+        - chmod 644

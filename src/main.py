@@ -1,3 +1,5 @@
+import codecs
+import json
 import os
 from datetime import datetime
 
@@ -55,7 +57,7 @@ def sane_file_naming_schema(files):
         if len(parts) > 1:
             # see if first field is a valid date
             try:
-                file_data["datetime"] = datetime.strptime(parts[0], "%Y-%m-%d")
+                file_data["datetime"] = str(datetime.strptime(parts[0], "%Y-%m-%d"))
             except ValueError:
                 print("Invalid scheme:   ", file)
                 return False
@@ -65,7 +67,7 @@ def sane_file_naming_schema(files):
         if len(parts) > 2:
             # three fields, so first and second field have to be date and time, third the title
             try:
-                file_data["datetime"] = datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S")
+                file_data["datetime"] = str(datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S"))
                 file_data["title"] = parts[2]
             except ValueError:
                 return False
@@ -73,16 +75,6 @@ def sane_file_naming_schema(files):
         json.append(file_data)
 
     return json
-
-
-def write_json(files, json_file):
-    """
-    Writes a *.json when given a sane list of file names
-    :param files: list of sane file name strings
-    :param json_file_name: string
-    :return: True if file was written
-    """
-    pass
 
 
 class Media(object):
@@ -115,13 +107,23 @@ class Media(object):
             raise
 
 
+def write_json(data, file_name):
+    """
+    Writes an object to a json file
+    :param data: list of dictionaries
+    :param file_name: string
+    :return: True if file was written
+    """
+    json.dump(data, codecs.open(file_name, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+
+
 def main():
     files = read_dir(media_files_directory, hidden_files_prefixes)
     valid_extensions = sane_file_extensions(files, allowed_extensions)
     valid_schema = sane_file_naming_schema(files)
     if valid_extensions and valid_schema:
         print("Media directory is clean!")
-        print(valid_schema)
+        write_json(valid_schema, "./test.json")
 
 
 if __name__ == "__main__":
