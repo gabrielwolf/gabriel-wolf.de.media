@@ -72,19 +72,16 @@ def write_json(files, json_file):
     :param json_file_name: string
     :return: True if file was written
     """
-    media_objects_list = []
-    for file in files:
-        pass
+    pass
 
 
 class Media(object):
-
     def __init__(self, **kwargs):
         # test if there is a date, and check if it is sane
         try:
             kwargs["date"]
             try:
-                self.date = datetime.strptime(kwargs["date"], "%Y-%m-%d")
+                self.date = datetime.strptime(kwargs["date"], "%Y-%m-%d").date()
             except ValueError:
                 print("Invalid date!", kwargs["date"])
                 raise
@@ -109,10 +106,14 @@ class Media(object):
 
 
 def main():
-    extension_test = sane_file_extensions(read_dir(media_files_directory, hidden_files_prefixes), allowed_extensions)
-    schema_test = sane_file_naming_schema(read_dir(media_files_directory, hidden_files_prefixes))
+    files = read_dir(media_files_directory, hidden_files_prefixes)
+    extension_test = sane_file_extensions(files, allowed_extensions)
+    schema_test = sane_file_naming_schema(files)
     if extension_test and schema_test:
         print("Media directory is clean!")
+        media_files_objects = []
+        media_files_objects.append(Media(date="2019-06-02", time="15-16-02", title="Tagebuch"))
+        print(media_files_objects[0].date)
 
 
 if __name__ == "__main__":
