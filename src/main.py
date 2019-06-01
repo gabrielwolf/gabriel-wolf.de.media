@@ -78,16 +78,34 @@ def write_json(files, json_file):
 
 
 class Media(object):
-    def __init__(self, date, time, title, *args):
+
+    def __init__(self, **kwargs):
+        # test if there is a date, and check if it is sane
         try:
-            self.date = datetime.strptime(date, "%Y-%m-%d")
-        except ValueError:
-            print("Invalid date! ", date)
+            kwargs["date"]
+            try:
+                self.date = datetime.strptime(kwargs["date"], "%Y-%m-%d")
+            except ValueError:
+                print("Invalid date!", kwargs["date"])
+                raise
+        except KeyError:
+            print("Missing date!")
+            raise
+
+        # test if a given time is sane
+        if kwargs.get("time") is not None:
+            try:
+                self.time = datetime.strptime(kwargs["time"], "%H-%M-%S")
+            except ValueError:
+                print("Invalid time! ", kwargs["time"])
+                raise
+
+        # test if a title is set
         try:
-            self.time = datetime.strptime(time, "%H-%M-%S")
-        except ValueError:
-            print("Invalid time! ", time)
-        self.title = title
+            self.title = kwargs["title"]
+        except KeyError:
+            print("Missing title!")
+            raise
 
 
 def main():

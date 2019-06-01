@@ -3,18 +3,44 @@ from unittest import TestCase
 from src.main import sane_file_extensions, sane_file_naming_schema, Media
 
 
-def create_media_object(date, time, title):
-    Media(date, time, title)
+def create_media_object(**kwargs):
+    print(kwargs)
+    try:
+        Media(**kwargs)
+        return True
+    except KeyError:
+        print("Could not instantiate media object")
+        return False
+    except ValueError:
+        print("Could not instantiate media object")
+        return False
 
 
 class MediaObjectTests(TestCase):
 
     def test_create_media_object_positive(self):
         print("--> ", self._testMethodName)
-        self.assertTrue(Media("2019-06-02", "15-16-02", "Tagebuch"))
+        self.assertTrue(create_media_object(date="2019-06-02", time="15-16-02", title="Tagebuch"))
 
-    def test_create_media_object_negative(self):
-        self.assertRaises(ValueError, create_media_object("2019-22-02", "15-16-02", "Tagebuch"))
+    def test_create_media_object_no_date_negative(self):
+        print("--> ", self._testMethodName)
+        self.assertFalse(create_media_object(time="15-16-02", title="Tagebuch"))
+
+    def test_create_media_object_no_time_positive(self):
+        print("--> ", self._testMethodName)
+        self.assertTrue(create_media_object(date="2019-06-02", title="Tagebuch"))
+
+    def test_create_media_object_wrong_date(self):
+        print("--> ", self._testMethodName)
+        self.assertFalse(create_media_object(date="2019-22-22", time="15-16-02", title="Tagebuch"))
+
+    def test_create_media_object_wrong_time(self):
+        print("--> ", self._testMethodName)
+        self.assertFalse(create_media_object(date="2019-12-22", time="55-16-02", title="Tagebuch"))
+
+    def test_create_media_object_more_data_positive(self):
+        print("--> ", self._testMethodName)
+        self.assertTrue(create_media_object(date="2019-12-02", time="15-16-02", title="Tagebuch", class_name="blue"))
 
 
 class FileNamingTests(TestCase):
