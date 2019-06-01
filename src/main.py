@@ -60,14 +60,16 @@ def sane_file_naming_schema(files):
                 print("Invalid scheme:   ", file)
                 return False
         if len(parts) == 2:
+            # we have just to fields so the second is the title
             file_data["title"] = parts[1]
         if len(parts) > 2:
+            # three fields, so first and second field have to be date and time, third the title
             try:
                 file_data["datetime"] = datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S")
                 file_data["title"] = parts[2]
             except ValueError:
                 return False
-
+        file_data["extension"] = extension
         json.append(file_data)
 
     return json
@@ -115,10 +117,11 @@ class Media(object):
 
 def main():
     files = read_dir(media_files_directory, hidden_files_prefixes)
-    test_extensions = sane_file_extensions(files, allowed_extensions)
-    test_schema = sane_file_naming_schema(files)
-    if test_extensions and test_schema:
+    valid_extensions = sane_file_extensions(files, allowed_extensions)
+    valid_schema = sane_file_naming_schema(files)
+    if valid_extensions and valid_schema:
         print("Media directory is clean!")
+        print(valid_schema)
 
 
 if __name__ == "__main__":
