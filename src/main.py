@@ -46,7 +46,8 @@ def sane_file_naming_schema(files):
 
     :param files: list of file name strings
     """
-    json = []
+    json = {}
+    json["events"] = []
     for file in files:
         file_data = {}
         filename, extension = os.path.splitext(file)
@@ -72,7 +73,7 @@ def sane_file_naming_schema(files):
             except ValueError:
                 return False
         file_data["extension"] = extension.strip(".")
-        json.append(file_data)
+        json["events"].append(file_data)
 
     return json
 
