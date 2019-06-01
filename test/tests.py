@@ -65,22 +65,22 @@ class FileNamingTests(TestCase):
         self.assertFalse(sane_file_extensions(['test.exe'], ['.txt', '.jpg']))
         print("")
 
-    def test_sane_file_naming_schema_simple_positive(self):
+    def test_sane_file_naming_schema_date_positive(self):
         print("--> ", self._testMethodName)
         self.assertTrue(sane_file_naming_schema(['2019-05-27_Sonnenuntergang in Petershausen.jpg']))
         print("")
 
-    def test_sane_file_naming_schema_simple_negative(self):
+    def test_sane_file_naming_schema_date_negative(self):
         print("--> ", self._testMethodName)
         self.assertFalse(sane_file_naming_schema(['2019-99-27_Sonnenuntergang in Petershausen.jpg']))
         print("")
 
-    def test_sane_file_naming_schema_extended_positive(self):
+    def test_sane_file_naming_schema_datetime_positive(self):
         print("--> ", self._testMethodName)
         self.assertTrue(sane_file_naming_schema(['2019-05-27_20-41-36_Sonnenuntergang in Petershausen.jpg']))
         print("")
 
-    def test_sane_file_naming_schema_extended_negative(self):
+    def test_sane_file_naming_schema_datetime_negative(self):
         print("--> ", self._testMethodName)
         self.assertFalse(sane_file_naming_schema(['2019-05-27_29-99-36_Sonnenuntergang in Petershausen.jpg']))
         print("")

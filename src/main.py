@@ -34,8 +34,9 @@ def sane_file_extensions(files, extensions):
 
 def sane_file_naming_schema(files):
     """
-    returns False for lists that contain file names, that don't match the scheme.
-    File names mustn't start with underscore, that leads to a negative result.
+    returns json for given file data if given file names match the scheme,
+    otherwise returns False.
+    File names mustn't start with underscore, that leads to False.
     Time is optional, just omit _HH-MM-SS
 
     Scheme:  YYYY-MM-DD_HH-MM-SS_title.extension
@@ -43,26 +44,33 @@ def sane_file_naming_schema(files):
 
     :param files: list of file name strings
     """
+    json = []
     for file in files:
+        file_data = {}
         filename, extension = os.path.splitext(file)
         parts = filename.split("_")
         if len(parts) == 1:
-            # not a single underscore
+            # not a single field
             return False
-        if len(parts) >= 2:
-            # good conditions for the simple scheme
+        if len(parts) > 1:
+            # see if first field is a valid date
             try:
-                test = datetime.strptime(parts[0], "%Y-%m-%d")  # valid date
+                file_data["datetime"] = datetime.strptime(parts[0], "%Y-%m-%d")
             except ValueError:
                 print("Invalid scheme:   ", file)
                 return False
-        if len(parts) >= 3:
+        if len(parts) == 2:
+            file_data["title"] = parts[1]
+        if len(parts) > 2:
             try:
-                test = datetime.strptime(parts[1], "%H-%M-%S")
+                file_data["datetime"] = datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S")
+                file_data["title"] = parts[2]
             except ValueError:
-                print("Invalid scheme:   ", file)
                 return False
-    return True
+
+        json.append(file_data)
+
+    return json
 
 
 def write_json(files, json_file):
@@ -92,7 +100,7 @@ class Media(object):
         # test if a given time is sane
         if kwargs.get("time") is not None:
             try:
-                self.time = datetime.strptime(kwargs["time"], "%H-%M-%S")
+                self.time = datetime.strptime(kwargs["time"], "%H-%M-%S").time()
             except ValueError:
                 print("Invalid time! ", kwargs["time"])
                 raise
@@ -107,13 +115,10 @@ class Media(object):
 
 def main():
     files = read_dir(media_files_directory, hidden_files_prefixes)
-    extension_test = sane_file_extensions(files, allowed_extensions)
-    schema_test = sane_file_naming_schema(files)
-    if extension_test and schema_test:
+    test_extensions = sane_file_extensions(files, allowed_extensions)
+    test_schema = sane_file_naming_schema(files)
+    if test_extensions and test_schema:
         print("Media directory is clean!")
-        media_files_objects = []
-        media_files_objects.append(Media(date="2019-06-02", time="15-16-02", title="Tagebuch"))
-        print(media_files_objects[0].date)
 
 
 if __name__ == "__main__":
