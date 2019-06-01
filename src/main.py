@@ -16,6 +16,7 @@ def read_dir(directory, hidden_files_prefixes):
     :return: list
     """
     files = os.listdir(directory)
+    files.sort(reverse=True)
     files = [x for x in files if not x.startswith(hidden_files_prefixes)]
     return files
 
