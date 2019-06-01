@@ -131,7 +131,7 @@ def main():
     valid_schema = sane_file_naming_schema(files)
     if valid_extensions and valid_schema:
         print("Media directory is clean!")
-        write_json(valid_schema, "../dist/media_data.json")
+        write_json(valid_schema, "../dist/media.json")
 
 
 if __name__ == "__main__":
