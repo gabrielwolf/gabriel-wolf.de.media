@@ -71,7 +71,7 @@ def sane_file_naming_schema(files):
                 file_data["title"] = parts[2]
             except ValueError:
                 return False
-        file_data["extension"] = extension
+        file_data["extension"] = extension.strip(".")
         json.append(file_data)
 
     return json

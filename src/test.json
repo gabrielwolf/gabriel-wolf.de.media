@@ -1,12 +1,22 @@
 [
     {
-        "date": "2019-05-23",
-        "time": "23-23-00",
-        "title": "Mein erster Tagebucheintrag"
+        "datetime":"2018-12-31 00:00:00",
+        "extension":"jpg",
+        "title":"Wolverine"
     },
     {
-        "date": "2019-05-25",
-        "time": "23-25-00",
-        "title": "Mein zweiter Tagebucheintrag"
+        "datetime":"2018-06-26 06:30:14",
+        "extension":"jpg",
+        "title":"Portrait Benediktbeuern"
+    },
+    {
+        "datetime":"2019-05-24 13:21:23",
+        "extension":"mp4",
+        "title":"Spendenaufruf"
+    },
+    {
+        "datetime":"2018-12-24 17:03:00",
+        "extension":"wav",
+        "title":"Wenn Sterne blu\u0308hen"
     }
 ]
