@@ -3,6 +3,7 @@ from datetime import datetime
 
 media_files_directory = "../media/"
 allowed_extensions = [".txt", ".jpg", ".mp4", ".wav"]
+hidden_files_prefixes = (".", "_", "Makefile")
 
 
 def read_dir(directory, hidden_files_prefixes):
@@ -65,8 +66,8 @@ def sane_file_naming_schema(files):
 
 
 def main():
-    extension_test = sane_file_extensions(read_dir(media_files_directory, (".", "_", "Makefile")), allowed_extensions)
-    schema_test = sane_file_naming_schema(read_dir(media_files_directory, (".", "_", "Makefile")))
+    extension_test = sane_file_extensions(read_dir(media_files_directory, hidden_files_prefixes), allowed_extensions)
+    schema_test = sane_file_naming_schema(read_dir(media_files_directory, hidden_files_prefixes))
     if extension_test and schema_test:
         print("Media directory is clean!")
 
