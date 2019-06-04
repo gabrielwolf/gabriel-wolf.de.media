@@ -74,6 +74,7 @@ def sane_file_naming_schema(files):
             except ValueError:
                 return False
         file_data["extension"] = extension.strip(".")
+        file_data["url"] = file
         json["events"].append(file_data)
 
     return json
