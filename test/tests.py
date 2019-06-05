@@ -1,6 +1,7 @@
+import os
 from unittest import TestCase
 
-from src.main import sane_file_extensions, sane_file_naming_schema, Media
+from src.main import sane_file_extensions, sane_file_naming_schema, Media, write_json, read_json, txt_to_html_to_json
 
 
 def create_media_object(**kwargs):
@@ -98,4 +99,18 @@ class FileNamingTests(TestCase):
     def test_write_json_positive(self):
         print("--> ", self._testMethodName)
         self.assertTrue(write_json(['2019-05-27_Sonnenuntergang in Petershausen.jpg'], "test.json"))
+        print("")
+
+
+class TxtToJsonTests(TestCase):
+
+    def test_convert_txt_to_html_to_json_positive(self):
+        print("--> ", self._testMethodName)
+        text = "Lorem ipsum dolor sit amet.\nNeue Zeile.\n    Zeile mit 4 Leerzeichen\n   Zeile mit drei Leerzeichen."
+        with open("test.txt", "w") as file:
+            file.write(text)
+        txt_to_html_to_json("test.txt", "test.json")
+        self.assertTrue(read_json("test.json"))
+        os.remove("test.txt")
+        os.remove("test.json")
         print("")
