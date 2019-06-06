@@ -2,7 +2,7 @@
 
 - gabriel-wolf.de.media
     - beim einchecken von mediendateien muss folgendes passieren
-      - die dateinamen werden geprüft
+      - die dateinamen (Verzeichnis mit den hochauflösenden Dateien) werden geprüft >> ./main.py
       - alle erforderlichen alternativen werdengecodet
         - foto (wird leicht nachgeschärft)
           1. passende Größen erstellen (400px, 600px, 800px, 1000px, 1500px, 2000px, 2500px)
@@ -27,7 +27,7 @@
           aus dem wav mit dem tool `remetacator` logic hinweise rauslöschen
           - mp3:    ffmpeg -i input.wav -codec:a libmp3lame -qscale:a 2 output.mp3
           - ogg:    ffmpeg -i input.wav output.ogg
-          - flac:   ffmpeg -i input.wav output.flac
+          - flac (nur Download!):   ffmpeg -i input.wav output.flac
 
         - video
           - Platzhalter erzeugen:           ffmpeg -i input.mp4 -ss 00:00:00.200 -vframes 1 output.jpg
@@ -35,5 +35,8 @@
           - webm:   ffmpeg -i input.mp4 -vcodec libvpx -b:v 5120k -c:a libvorbis -ac 2 -b:a 192k -ar 44100 output.webm
           - ogg:    ffmpeg -i input.mp4 -c:v libtheora -c:a libvorbis -b:v 5120k -b:a 192k -ar 44100 output.ogg
           - mp4:    ffmpeg -i input.mp4 -vcodec h264 -vb 5120k -acodec aac -ab 192k -pix_fmt yuv420p output.mp4
+
+        - text
+          convert_txt_to_html_to_json_positive input.txt output.json
 
         - chmod 644
