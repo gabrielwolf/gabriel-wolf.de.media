@@ -1,3 +1,9 @@
+#!/usr/local/bin/python3
+
+"""
+This script tests the media source directory if it is "valid"
+"""
+
 import codecs
 import json
 import os
