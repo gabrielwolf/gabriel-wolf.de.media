@@ -135,24 +135,14 @@ def read_json(file_name):
     :return: json object
     """
     try:
-        json.loads(codecs.open(file_name, 'r', encoding='utf-8').read())
-        return True
+        with open(file_name, "rt") as input_file:
+            return json.loads(input_file.read())
     except TypeError:
         print("No valid JSON data!")
         raise
     except IOError:
         print("Could not read file from disk!")
         raise
-
-
-def txt_to_html_to_json(input_file, output_file):
-    json_container = dict()
-    with open(input_file, "rt") as file:
-        # Display is in browser, so prepare text and replace newlines and larger whitespace with HTML
-        data = file.read().replace("\n", "<br>").replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;").replace("   ",
-                                                                                                     "&nbsp;&nbsp;&nbsp;")
-        json_container['text'] = data
-        write_json(json_container, output_file)
 
 
 def main():
