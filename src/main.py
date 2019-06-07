@@ -1,13 +1,15 @@
 #!/usr/local/bin/python3
 
 """
-This script tests the media source directory if it is "valid"
+This script tests the media source directory if it is "valid" and writes a sane JSON
 """
 
 import codecs
 import json
 import os
 from datetime import datetime
+
+from PIL import Image
 
 media_files_directory = "../media/"
 allowed_extensions = [".txt", ".jpg", ".mp4", ".wav"]
@@ -58,6 +60,10 @@ def sane_file_naming_schema(files):
     for file in files:
         file_data = {}
         filename, extension = os.path.splitext(file)
+        if extension == ".jpg":
+            width, height = read_image_size(media_files_directory + file)
+            file_data['width'] = width
+            file_data['height'] = height
         parts = filename.split("_")
         if len(parts) == 1:
             # not a single field
@@ -149,6 +155,15 @@ def read_json(file_name):
     except IOError:
         print("Could not read file from disk!")
         raise
+
+
+def read_image_size(file_name):
+    """
+    Reads width and height from a file
+    :param file_name: String
+    :return: width, height
+    """
+    return Image.open(file_name).size
 
 
 def main():
