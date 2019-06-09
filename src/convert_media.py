@@ -12,21 +12,21 @@ def get_shell_commands(file, extension):
     if extension == ".jpg":
         tool = "convert"
         output.append(
-            [tool, file.replace(".jpg", "-preload.jpg"), "-strip -define -strip -geometry 400x -blur 0x20 -quality 1"])
-        output.append([tool, file.replace(".jpg", "-400w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90"])
-        output.append([tool, file.replace(".jpg", "-600w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 600x -sharpen 0x0.9 -quality 90"])
-        output.append([tool, file.replace(".jpg", "-800w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 800x -sharpen 0x0.9 -quality 90"])
-        output.append([tool, file.replace(".jpg", "-1000w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 1000x -sharpen 0x0.9 -quality 90"])
-        output.append([tool, file.replace(".jpg", "-1500w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 1500x -sharpen 0x0.9 -quality 90"])
-        output.append([tool, file.replace(".jpg", "-2000w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 2000x -sharpen 0x0.9 -quality 90"])
-        output.append([tool, file.replace(".jpg", "-2500w.jpg"),
-                       "-strip -define jpeg:dct-method=float -geometry 2500x -sharpen 0x0.9 -quality 90"])
+            [tool, "-strip -define -strip -geometry 400x -blur 0x20 -quality 1", file.replace(".jpg", "-preload.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-400w.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 600x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-600w.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 800x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-800w.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 1000x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-1000w.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 1500x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-1500w.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 2000x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-2000w.jpg")])
+        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 2500x -sharpen 0x0.9 -quality 90",
+                       file.replace(".jpg", "-2500w.jpg")])
     return output
 
 
@@ -51,16 +51,16 @@ def is_done(file, extension, output_dir):
     if had_to_be_done_files == are_done_files:
         return True
 
-    print(file + " is not (yet) web ready!")
-    print(file + " is not (yet) web ready!")
+    print(file + " is not (yet) web ready.")
     return False
 
 
 def create(file, extension, input_dir, output_dir):
-    files_to_be_done = get_shell_commands(file, extension)
-    for file_to_be_done in files_to_be_done:
-        print("%s %s %s/%s %s/%s" % (
-            file_to_be_done[0], file_to_be_done[2], input_dir, file, output_dir, file_to_be_done[1]))
+    work = get_shell_commands(file, extension)
+    for item in work:
+        # item[0] is the tool, item[1] are the arguments and item[2] the output filename
+        command = "{} {} {}/{} {}/{}".format(item[0], item[1], input_dir, file, output_dir, item[2])
+        print(command)
 
 
 def convert_media(input_dir, output_dir):
