@@ -2,6 +2,7 @@
 """
 This script converts media data of a given dir for web use.
 """
+
 import os
 
 from src.main import read_dir
@@ -13,19 +14,26 @@ def get_shell_commands(file, extension):
         tool = "convert"
         output.append(
             [tool, "-strip -define -strip -geometry 400x -blur 0x20 -quality 1", file.replace(".jpg", "-preload.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-400w.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 600x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 600x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-600w.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 800x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 800x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-800w.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 1000x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 1000x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-1000w.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 1500x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 1500x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-1500w.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 2000x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 2000x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-2000w.jpg")])
-        output.append([tool, "-strip -define jpeg:dct-method=float -geometry 2500x -sharpen 0x0.9 -quality 90",
+        output.append([tool,
+                       "-strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 2500x -sharpen 0x0.9 -quality 90",
                        file.replace(".jpg", "-2500w.jpg")])
     return output
 
@@ -34,7 +42,10 @@ def is_done(file, extension, output_dir):
     had_to_be_done_files = []
     are_done_files = []
 
-    had_to_be_done_files.append(get_shell_commands(file, extension))
+    files = get_shell_commands(file, extension)
+    for file in files:
+        file = file[2]
+        had_to_be_done_files.append(file)
 
     try:
         output_files = read_dir(output_dir, (".", "_"))
@@ -61,6 +72,7 @@ def create(file, extension, input_dir, output_dir):
         # item[0] is the tool, item[1] are the arguments and item[2] the output filename
         command = "{} {} {}/{} {}/{}".format(item[0], item[1], input_dir, file, output_dir, item[2])
         print(command)
+        os.system(command)
 
 
 def convert_media(input_dir, output_dir):
