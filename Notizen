@@ -26,10 +26,12 @@
              rm *_original
 
         - audio
-          aus dem wav mit dem tool `remetacator` logic hinweise rauslöschen
-          - mp3:    ffmpeg -i input.wav -codec:a libmp3lame -qscale:a 2 output.mp3
-          - ogg:    ffmpeg -i input.wav output.ogg
-          - flac (nur Download!):   ffmpeg -i input.wav output.flac
+          - mp3s werden aus qualitätsgründen nicht neu codiert, sondern einfach kopiert.
+          - wavs
+            - mit dem tool `remetacator` gecleaned, d.h. logic hinweise rausgelöscht
+            - mp3:    ffmpeg -i input.wav -codec:a libmp3lame -qscale:a 2 output.mp3
+            - ogg:    ffmpeg -i input.wav output.ogg
+            - flac:   ffmpeg -i input.wav output.flac
 
         - video
           - Platzhalter erzeugen:           ffmpeg -i input.mp4 -ss 00:00:00.200 -vframes 1 output.jpg

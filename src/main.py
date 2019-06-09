@@ -12,7 +12,7 @@ from datetime import datetime
 from PIL import Image
 
 media_files_directory = "../media/"
-allowed_extensions = [".txt", ".jpg", ".mp4", ".wav"]
+allowed_extensions = [".txt", ".jpg", ".mp4", ".wav", ".mp3"]
 hidden_files_prefixes = (".", "_", "Makefile")
 
 
