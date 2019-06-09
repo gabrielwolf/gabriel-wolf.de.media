@@ -6,7 +6,7 @@
       - alle erforderlichen alternativen werdengecodet
         - foto (wird leicht nachgeschärft)
           1. passende Größen erstellen (400px, 600px, 800px, 1000px, 1500px, 2000px, 2500px)
-             - jpg:                             convert -strip -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90 input.jpg input-400x.jpg
+             - jpg:                             convert -strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90 input.jpg input-400x.jpg
              - webp (umweg über png nötig!):    convert -strip -geometry 400x -sharpen 0x0.9 input.jpg input-400.png
                                                 cwebp -q 90 -m 6 input-400x.png -o input-400x.webp
 
