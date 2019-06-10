@@ -90,13 +90,13 @@ def convert_media(input_dir, output_dir):
 
 
 def main():
-    # if len(sys.argv) < 3:
-    #     print("This script converts media data from a given dir to a given dir for web use.")
-    #     print("Usage: ./convert_dir input_dir output_dir")
-    #     return False
-    # convert_media(sys.argv[1], sys.argv[2])
+    if len(sys.argv) < 3:
+        print("This script converts media data from a given dir to a given dir for web use.")
+        print("Usage: ./convert_dir input_dir output_dir")
+        return False
+    convert_media(sys.argv[1], sys.argv[2])
 
-    convert_media("/Users/jibazee/Desktop/media", "/Users/jibazee/Desktop/dist")
+    # convert_media("/Users/jibazee/Desktop/media", "/Users/jibazee/Desktop/dist")
 
 
 if __name__ == "__main__":

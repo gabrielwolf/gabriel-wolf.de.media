@@ -40,14 +40,20 @@ mp3: $(mp3done)
 wav: $(wavdone)
 
 # Make cannot handle spaces in filenames, so temporarily rename them
+.PHONY: nospaces
 nospaces:
 	rename -v 's/ /%20/g' *\ *
 	rename -v 's/ /%20/g' $(DEST)/*\ *
 
 # After Make is done, rename files back to having spaces
+.PHONY: yesspaces
 yesspaces:
 	rename -v 's/%20/ /g' *%20*
 	rename -v 's/%20/ /g' $(DEST)/*%20*
+
+.PHONY: wipe
+wipe:
+	rm -f $(DEST)/*
 
 clean:
 	rm -f *.done
