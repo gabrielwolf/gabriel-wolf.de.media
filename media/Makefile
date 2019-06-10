@@ -22,6 +22,13 @@ DEST = ../dist
 	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -compression_level 8 $(DEST)/$(subst .wav,,$<).flac
 	touch $@
 
+%.done : %.mp4
+	# Preload Image
+	ffmpeg -i $< -ss 00:00:05.000 -vframes 1 $(DEST)/$(subst .mp4,,$<).jpg
+	convert -strip -geometry 800x -blur 0x20 -quality 10 $(DEST)/$(subst .mp4,,$<).jpg $(DEST)/$(subst .mp4,,$<)-preload.jpg
+	rm -f $(DEST)/$(subst .mp4,,$<).jpg
+	touch $@
+
 jpg = $(shell ls *.jpg)
 jpgdone = $(subst .jpg,.done,$(jpg))
 
@@ -31,13 +38,17 @@ mp3done = $(subst .mp3,.done,$(mp3))
 wav = $(shell ls *.wav)
 wavdone = $(subst .wav,.done,$(wav))
 
-donefiles = $(jpgdone) $(mp3done) $(wavdone)
+mp4 = $(shell ls *.mp4)
+mp4done = $(subst .mp4,.done,$(mp4))
+
+donefiles = $(jpgdone) $(mp3done) $(wavdone) $(mp4done)
 
 all: $(donefiles)
 
 jpg: $(jpgdone)
 mp3: $(mp3done)
 wav: $(wavdone)
+mp4: $(mp4done)
 
 # Make cannot handle spaces in filenames, so temporarily rename them
 .PHONY: nospaces
