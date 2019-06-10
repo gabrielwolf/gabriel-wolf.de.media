@@ -13,7 +13,13 @@ DEST = ../dist
 	touch $@
 
 %.done : %.mp3
-	cp -v $< $(DEST)/$<
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -c:v copy -c:a copy $(DEST)/$<
+	touch $@
+
+%.done : %.wav
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -codec:a libmp3lame -qscale:a 2 $(DEST)/$(subst .wav,,$<).mp3
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -codec:a libvorbis -q:a 9 $(DEST)/$(subst .wav,,$<).ogg
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -compression_level 8 $(DEST)/$(subst .wav,,$<).flac
 	touch $@
 
 jpg = $(shell ls *.jpg)
@@ -22,12 +28,26 @@ jpgdone = $(subst .jpg,.done,$(jpg))
 mp3 = $(shell ls *.mp3)
 mp3done = $(subst .mp3,.done,$(mp3))
 
+wav = $(shell ls *.wav)
+wavdone = $(subst .wav,.done,$(wav))
+
 donefiles = $(jpgdone) $(mp3done) $(wavdone)
 
 all: $(donefiles)
 
 jpg: $(jpgdone)
 mp3: $(mp3done)
+wav: $(wavdone)
+
+# Make cannot handle spaces in filenames, so temporarily rename them
+nospaces:
+	rename -v 's/ /%20/g' *\ *
+	rename -v 's/ /%20/g' $(DEST)/*\ *
+
+# After Make is done, rename files back to having spaces
+yesspaces:
+	rename -v 's/%20/ /g' *%20*
+	rename -v 's/%20/ /g' $(DEST)/*%20*
 
 clean:
 	rm -f *.done

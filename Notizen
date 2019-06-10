@@ -6,7 +6,7 @@
       - alle erforderlichen alternativen werdengecodet
         - foto (wird leicht nachgeschärft)
           1. passende Größen erstellen (400px, 600px, 800px, 1000px, 1500px, 2000px, 2500px)
-             - jpg:                             convert -strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.9 -quality 90 input.jpg input-400x.jpg
+             + jpg:                             convert -strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.5 -quality 90 input.jpg input-400x.jpg
              - webp (umweg über png nötig!):    convert -strip -geometry 400x -sharpen 0x0.9 input.jpg input-400.png
                                                 cwebp -q 90 -m 6 input-400x.png -o input-400x.webp
 
@@ -15,21 +15,19 @@
 
                alles in einem verzeichnis:  find . -iname '*.png' | parallel 'cwebp -q 90 -m 6 {} -o {}.webp'
 
-          2. metadaten löschen
-             exiftool -all= input.jpg
-             for i in *.jpg; do echo "Processing $i"; exiftool -all= "$i"; done
+          2. // metadaten löschen (nicht mehr nötig, -strip erledigt das bereits bei convert)
+                exiftool -all= input.jpg
+                for i in *.jpg; do echo "Processing $i"; exiftool -all= "$i"; done
 
           3. Creative Commons Metadaten schreiben
-             exiftool -P -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Photographer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' input.jpg
-
-          4. aufräumen
-             rm *_original
+             exiftool -P -overwrite_original_in_place -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Photographer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' input.jpg
 
         - audio
-          - mp3s werden aus qualitätsgründen nicht neu codiert, sondern einfach kopiert.
+          + mp3s werden aus qualitätsgründen nicht neu codiert, sondern einfach kopiert. (incl. logic hinweise rauslöschen)
+            - ffmpeg -i input.mp3 -c:v copy -c:a copy output.mp3
+
           - wavs
-            - mit dem tool `remetacator` gecleaned, d.h. logic hinweise rausgelöscht
-            - mp3:    ffmpeg -i input.wav -codec:a libmp3lame -qscale:a 2 output.mp3
+            - mp3:    ffmpeg -i input.wav -metadata originator= -metadata encoded_by= -codec:a libmp3lame -q:a 0 output.mp3
             - ogg:    ffmpeg -i input.wav output.ogg
             - flac:   ffmpeg -i input.wav output.flac
 
