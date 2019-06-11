@@ -60,36 +60,37 @@ def sane_file_naming_schema(files):
     for file in files:
         file_data = {}
         filename, extension = os.path.splitext(file)
-        if extension == ".jpg":
-            argument = Path(media_files_directory + file)
-            if argument.is_file():
-                width, height = read_image_size(argument)
-                file_data['width'] = width
-                file_data['height'] = height
-        parts = filename.split("_")
-        if len(parts) == 1:
-            # not a single field
-            return False
-        if len(parts) > 1:
-            # see if first field is a valid date
-            try:
-                file_data["datetime"] = str(datetime.strptime(parts[0], "%Y-%m-%d"))
-            except ValueError:
-                print("Invalid scheme:   ", file)
+        if not extension == ".done":
+            if extension == ".jpg":
+                argument = Path(media_files_directory + file)
+                if argument.is_file():
+                    width, height = read_image_size(argument)
+                    file_data['width'] = width
+                    file_data['height'] = height
+            parts = filename.split("_")
+            if len(parts) == 1:
+                # not a single field
                 return False
-        if len(parts) == 2:
-            # we have just to fields so the second is the title
-            file_data["title"] = parts[1]
-        if len(parts) > 2:
-            # three fields, so first and second field have to be date and time, third the title
-            try:
-                file_data["datetime"] = str(datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S"))
-                file_data["title"] = parts[2]
-            except ValueError:
-                return False
-        file_data["extension"] = extension.strip(".")
-        file_data["url"] = file
-        json_dict["events"].append(file_data)
+            if len(parts) > 1:
+                # see if first field is a valid date
+                try:
+                    file_data["datetime"] = str(datetime.strptime(parts[0], "%Y-%m-%d"))
+                except ValueError:
+                    print("Invalid scheme:   ", file)
+                    return False
+            if len(parts) == 2:
+                # we have just to fields so the second is the title
+                file_data["title"] = parts[1]
+            if len(parts) > 2:
+                # three fields, so first and second field have to be date and time, third the title
+                try:
+                    file_data["datetime"] = str(datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S"))
+                    file_data["title"] = parts[2]
+                except ValueError:
+                    return False
+            file_data["extension"] = extension.strip(".")
+            file_data["url"] = file
+            json_dict["events"].append(file_data)
 
     return json_dict
 
