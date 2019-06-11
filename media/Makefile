@@ -1,7 +1,7 @@
 DEST = ../dist
 
 %.done : %.jpg
-	convert -strip -geometry 400x -blur 0x20 -interlace JPEG -sampling-factor 4:2:0 -quality 1 $< $(DEST)/$(subst .jpg,,$<)-preload.jpg
+	convert -strip -geometry 400x -blur 0x20 -interlace JPEG -sampling-factor 4:2:0 -quality 5 $< $(DEST)/$(subst .jpg,,$<)-preload.jpg
 	convert -strip -geometry 400x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 95 $< $(DEST)/$(subst .jpg,,$<)-400w.jpg
 	convert -strip -geometry 600x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-600w.jpg
 	convert -strip -geometry 800x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-800w.jpg
@@ -17,16 +17,27 @@ DEST = ../dist
 	touch $@
 
 %.done : %.wav
-	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -codec:a libmp3lame -qscale:a 2 $(DEST)/$(subst .wav,,$<).mp3
-	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -codec:a libvorbis -q:a 9 $(DEST)/$(subst .wav,,$<).ogg
-	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -compression_level 8 $(DEST)/$(subst .wav,,$<).flac
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -codec:a libmp3lame -qscale:a 2 $(DEST)/$(subst .wav,.mp3,$<)
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -codec:a libvorbis -q:a 9 $(DEST)/$(subst .wav,.ogg,$<)
+	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -compression_level 8 $(DEST)/$(subst .wav,.flac,$<)
 	touch $@
 
 %.done : %.mp4
 	# Preload Image
-	ffmpeg -i $< -ss 00:00:05.000 -vframes 1 $(DEST)/$(subst .mp4,,$<).jpg
-	convert -strip -geometry 800x -blur 0x20 -quality 10 $(DEST)/$(subst .mp4,,$<).jpg $(DEST)/$(subst .mp4,,$<)-preload.jpg
+	ffmpeg -y -i $< -ss 00:00:05.000 -vframes 1 $(DEST)/$(subst .mp4,,$<).jpg
+	convert -strip -geometry 800x -blur 0x20 -quality 5 $(DEST)/$(subst .mp4,,$<).jpg $(DEST)/$(subst .mp4,,$<)-preload.jpg
 	rm -f $(DEST)/$(subst .mp4,,$<).jpg
+	# Make actual video conversion
+	ffmpeg -y -i $< -vcodec libvpx -b:v 5120k -c:a libvorbis -ac 2 -b:a 192k -ar 44100 $(DEST)/$(subst .mp4,.webm,$<)
+	ffmpeg -y -i $< -c:v libtheora -c:a libvorbis -b:v 5120k -b:a 192k -ar 44100 $(DEST)/$(subst .mp4,.ogg,$<)
+	ffmpeg -y -i $< -vcodec h264 -vb 5120k -acodec aac -ab 192k -pix_fmt yuv420p $(DEST)/$(subst .mp4,.mp4,$<)
+	touch $@
+
+%.done : %.txt
+	( \
+	source /Users/jibazee/Websites/gabriel-wolf.de.media/venv/bin/activate; \
+	/Users/jibazee/Websites/gabriel-wolf.de.media/src/convert_txt_to_html_to_json.py $< $(DEST)/$(subst .txt,,$<).json; \
+	)
 	touch $@
 
 jpg = $(shell ls *.jpg)
@@ -41,7 +52,10 @@ wavdone = $(subst .wav,.done,$(wav))
 mp4 = $(shell ls *.mp4)
 mp4done = $(subst .mp4,.done,$(mp4))
 
-donefiles = $(jpgdone) $(mp3done) $(wavdone) $(mp4done)
+txt = $(shell ls *.txt)
+txtdone = $(subst .txt,.done,$(txt))
+
+donefiles = $(jpgdone) $(mp3done) $(wavdone) $(mp4done) $(txtdone)
 
 all: $(donefiles)
 
@@ -49,18 +63,19 @@ jpg: $(jpgdone)
 mp3: $(mp3done)
 wav: $(wavdone)
 mp4: $(mp4done)
+txt: $(txtdone)
 
 # Make cannot handle spaces in filenames, so temporarily rename them
 .PHONY: nospaces
 nospaces:
-	rename -v 's/ /%20/g' *\ *
-	rename -v 's/ /%20/g' $(DEST)/*\ *
+	2>/dev/null 1>/dev/null rename -v 's/ /%20/g' *\ * &
+	2>/dev/null 1>/dev/null rename -v 's/ /%20/g' $(DEST)/*\ * &
 
 # After Make is done, rename files back to having spaces
 .PHONY: yesspaces
 yesspaces:
-	rename -v 's/%20/ /g' *%20*
-	rename -v 's/%20/ /g' $(DEST)/*%20*
+	2>/dev/null 1>/dev/null rename -v 's/%20/ /g' *%20* &
+	2>/dev/null 1>/dev/null rename -v 's/%20/ /g' $(DEST)/*%20* &
 
 .PHONY: wipe
 wipe:
