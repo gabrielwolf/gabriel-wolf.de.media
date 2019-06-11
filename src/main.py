@@ -8,6 +8,7 @@ import codecs
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 from PIL import Image
 
@@ -55,15 +56,16 @@ def sane_file_naming_schema(files):
 
     :param files: list of file name strings
     """
-    json = {}
-    json["events"] = []
+    json_dict = {"events": []}
     for file in files:
         file_data = {}
         filename, extension = os.path.splitext(file)
         if extension == ".jpg":
-            width, height = read_image_size(media_files_directory + file)
-            file_data['width'] = width
-            file_data['height'] = height
+            argument = Path(media_files_directory + file)
+            if argument.is_file():
+                width, height = read_image_size(argument)
+                file_data['width'] = width
+                file_data['height'] = height
         parts = filename.split("_")
         if len(parts) == 1:
             # not a single field
@@ -87,9 +89,9 @@ def sane_file_naming_schema(files):
                 return False
         file_data["extension"] = extension.strip(".")
         file_data["url"] = file
-        json["events"].append(file_data)
+        json_dict["events"].append(file_data)
 
-    return json
+    return json_dict
 
 
 def write_json(data, file_name):
