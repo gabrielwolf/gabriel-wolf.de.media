@@ -1,17 +1,17 @@
 ..:: Notizen ::..
 
 - gabriel-wolf.de.media
-    - beim einchecken von mediendateien muss folgendes passieren
-      - die dateinamen (Verzeichnis mit den hochauflösenden Dateien) werden geprüft >> ./main.py
-      - alle erforderlichen alternativen werdengecodet
+    + beim einchecken von mediendateien muss folgendes passieren
+      + die dateinamen (Verzeichnis mit den hochauflösenden Dateien) werden geprüft >> ./main.py
+      + alle erforderlichen alternativen werden gecodet
         + foto (wird leicht nachgeschärft)
           1. passende Größen erstellen (400px, 600px, 800px, 1000px, 1500px, 2000px, 2500px)
              + jpg:                             convert -strip -define jpeg:dct-method=float -geometry 400x -sharpen 0x0.5 -quality 90 input.jpg input-400x.jpg
-             - webp (umweg über png nötig!):    convert -strip -geometry 400x -sharpen 0x0.9 input.jpg input-400.png
-                                                cwebp -q 90 -m 6 input-400x.png -o input-400x.webp
+             // - webp (umweg über png nötig!):    convert -strip -geometry 400x -sharpen 0x0.9 input.jpg input-400.png
+                                                   cwebp -q 90 -m 6 input-400x.png -o input-400x.webp
 
-               optionale vorschaubilder in low quality:   convert -strip -geometry 400x -blur 0x20 -quality 5 input.jpg output-preload.jpg
-                                                          cwebp -q 1 -m 6 input-400.png -o input-preview.webp
+               + vorschaubilder in low quality:    convert -strip -geometry 400x -blur 0x20 -quality 5 input.jpg output-preload.jpg
+                                                   cwebp -q 1 -m 6 input-400.png -o input-preview.webp
 
                alles in einem verzeichnis:  find . -iname '*.png' | parallel 'cwebp -q 90 -m 6 {} -o {}.webp'
 
@@ -41,4 +41,4 @@
         + text
           convert_txt_to_html_to_json_positive input.txt output.json
 
-        - chmod 644
+        + chmod 644 *

@@ -77,6 +77,11 @@ yesspaces:
 	2>/dev/null 1>/dev/null rename -v 's/%20/ /g' *%20* &
 	2>/dev/null 1>/dev/null rename -v 's/%20/ /g' $(DEST)/*%20* &
 
+.PHONY: chmod
+chmod:
+	find $(DEST) -type f -exec chmod 0644 {} \;
+
+
 .PHONY: wipe
 wipe:
 	rm -f $(DEST)/*
