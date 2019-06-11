@@ -1,4 +1,6 @@
 DEST = ../dist
+VENV_DIR = ../venv/bin/activate
+CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 
 %.done : %.jpg
 	convert -strip -geometry 400x -blur 0x20 -interlace JPEG -sampling-factor 4:2:0 -quality 5 $< $(DEST)/$(subst .jpg,,$<)-preload.jpg
@@ -35,8 +37,8 @@ DEST = ../dist
 
 %.done : %.txt
 	( \
-	source /Users/jibazee/Websites/gabriel-wolf.de.media/venv/bin/activate; \
-	/Users/jibazee/Websites/gabriel-wolf.de.media/src/convert_txt_to_html_to_json.py $< $(DEST)/$(subst .txt,,$<).json; \
+	source $(VENV_DIR); \
+	$(CONVERT_TXT_TO_HTML_TO_JSON) $< $(DEST)/$(subst .txt,,$<).json; \
 	)
 	touch $@
 
@@ -68,14 +70,14 @@ txt: $(txtdone)
 # Make cannot handle spaces in filenames, so temporarily rename them
 .PHONY: nospaces
 nospaces:
-	2>/dev/null 1>/dev/null rename -v 's/ /%20/g' *\ * &
-	2>/dev/null 1>/dev/null rename -v 's/ /%20/g' $(DEST)/*\ * &
+	rename -v 's/ /%20/g' *\ * &
+	rename -v 's/ /%20/g' $(DEST)/*\ * &
 
 # After Make is done, rename files back to having spaces
 .PHONY: yesspaces
 yesspaces:
-	2>/dev/null 1>/dev/null rename -v 's/%20/ /g' *%20* &
-	2>/dev/null 1>/dev/null rename -v 's/%20/ /g' $(DEST)/*%20* &
+	rename -v 's/%20/ /g' *%20* &
+	rename -v 's/%20/ /g' $(DEST)/*%20* &
 
 .PHONY: chmod
 chmod:
