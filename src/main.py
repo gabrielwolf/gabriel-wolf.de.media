@@ -92,36 +92,6 @@ def sane_file_naming_schema(files):
     return json
 
 
-class Media(object):
-    def __init__(self, **kwargs):
-        # test if there is a date, and check if it is sane
-        try:
-            kwargs["date"]
-            try:
-                self.date = datetime.strptime(kwargs["date"], "%Y-%m-%d").date()
-            except ValueError:
-                print("Invalid date!", kwargs["date"])
-                raise
-        except KeyError:
-            print("Missing date!")
-            raise
-
-        # test if a given time is sane
-        if kwargs.get("time") is not None:
-            try:
-                self.time = datetime.strptime(kwargs["time"], "%H-%M-%S").time()
-            except ValueError:
-                print("Invalid time! ", kwargs["time"])
-                raise
-
-        # test if a title is set
-        try:
-            self.title = kwargs["title"]
-        except KeyError:
-            print("Missing title!")
-            raise
-
-
 def write_json(data, file_name):
     """
     Serializes and writes an object to a json file
