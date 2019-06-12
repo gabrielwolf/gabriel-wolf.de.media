@@ -38,7 +38,7 @@ CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 %.done : %.txt
 	( \
 	source $(VENV_DIR); \
-	$(CONVERT_TXT_TO_HTML_TO_JSON) $< $(DEST)/$(subst .txt,,$<).json; \
+	$(CONVERT_TXT_TO_HTML_TO_JSON) $< $(DEST)/$(subst .txt,.json,$<); \
 	)
 	touch $@
 
