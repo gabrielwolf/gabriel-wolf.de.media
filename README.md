@@ -99,7 +99,7 @@ make chmod
 ```
  
 ##### Render specific file types
-You can render `jpg`, `mp4`, `mp3`, `txt` and `wav`
+You can render `jpg`, `mp4`, `mp3`, `wav`, `txt` and `pdf`
 ```
 make nospaces
 make jpg

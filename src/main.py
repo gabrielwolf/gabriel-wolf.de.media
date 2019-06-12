@@ -13,7 +13,7 @@ from pathlib import Path
 from PIL import Image
 
 media_files_directory = "../media/"
-allowed_extensions = [".txt", ".jpg", ".mp4", ".wav", ".mp3", ".done"]
+allowed_extensions = [".txt", ".jpg", ".mp4", ".wav", ".mp3", ".pdf", ".done"]
 hidden_files_prefixes = (".", "_", "Makefile")
 
 

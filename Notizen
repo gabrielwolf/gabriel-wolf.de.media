@@ -48,4 +48,12 @@
     + text
       convert_txt_to_html_to_json_positive input.txt output.json
 
+    + score
+      pdf:            exiftool -P -overwrite_original_in_place -Producer= -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Composer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' output.pdf
+      preview image:  gs -r300x300 -sDEVICE=png16m -dFirstPage=1 -dLastPage=1 -o output.png input.pdf
+                      gm convert -geometry 300x +dither -depth 8 -colors 50 output.png output.png
+                      // cwebp -q 90 -m 6 output.png -o output.webp
+
+
+
 + chmod 644 *

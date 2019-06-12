@@ -42,6 +42,13 @@ CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 	)
 	touch $@
 
+%.done : %.pdf
+	gs -r300x300 -sDEVICE=png16m -dFirstPage=1 -dLastPage=1 -o $(DEST)/$(subst .pdf,.png,$<) $<
+	gm convert -geometry 300x +dither -depth 8 -colors 50 $(DEST)/$(subst .pdf,.png,$<) $(DEST)/$(subst .pdf,.png,$<)
+	cp -fv $< $(DEST)/$<
+	find $(DEST) -name "$<" -not -name "*©*" -exec exiftool -P -overwrite_original_in_place -Producer= -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Composer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' {} \;
+	touch $@
+
 jpg = $(shell ls *.jpg)
 jpgdone = $(subst .jpg,.done,$(jpg))
 
@@ -57,7 +64,10 @@ mp4done = $(subst .mp4,.done,$(mp4))
 txt = $(shell ls *.txt)
 txtdone = $(subst .txt,.done,$(txt))
 
-donefiles = $(jpgdone) $(mp3done) $(wavdone) $(mp4done) $(txtdone)
+pdf = $(shell ls *.pdf)
+pdfdone = $(subst .pdf,.done,$(pdf))
+
+donefiles = $(jpgdone) $(mp3done) $(wavdone) $(mp4done) $(txtdone) $(pdfdone)
 
 all: $(donefiles)
 
@@ -66,6 +76,7 @@ mp3: $(mp3done)
 wav: $(wavdone)
 mp4: $(mp4done)
 txt: $(txtdone)
+pdf: $(pdfdone)
 
 # Make cannot handle spaces in filenames, so temporarily rename them
 .PHONY: nospaces
