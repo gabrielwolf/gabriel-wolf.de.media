@@ -7,7 +7,9 @@ with info about all files in dir.
 *Tool 2* renders media files for web usage to a `dist/` dir.
 
 The tools do not depend on each other, you can check names, and you can render files. The files don't have to be named
-after the spec.
+after the spec.  
+
+Work on macOS and haven't tested them on Linux, but should be no big difference... 
 
 ### Specification
 
@@ -20,7 +22,7 @@ Example: 2019-05-27_20-44-16_Sonnenuntergang in Petershausen.jpg
 Time is optional...
 Scheme:  YYYY-MM-DD_title.extension
 Example: 2019-05-27_Sonnenuntergang in Petershausen.jpg
-``` 
+```
 
 #### Media file conversion
 - all files will be wiped of some uncomfortable meta information...
@@ -53,11 +55,13 @@ All files preserve resolution, but are transcoded for playback in a browser.
 - a JSON containing a HTML version, that preserves larger whitespaces (by some &amp;nbsp;)  
 
 ### Installation
-Be sure to have the latest versions installed:
+Be sure to have the latest CLI tools installed:
+- Python 3 (using 3.7.3 at the time of writing)
 - FFmpeg (libmp3lame, libvorbis)
 - ImageMagick (convert)
+- GraphicsMagick (ToDo: simplify to GraphicsMagick)
 - GNU Make
-- Python 3 (using 3.7.3 at the time of writing)
+- Ghostscript
 
 `media/` is the input dir for the hi resolution files  
 `dist/` is the output dir for renders
