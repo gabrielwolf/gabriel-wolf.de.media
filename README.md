@@ -58,8 +58,7 @@ All files preserve resolution, but are transcoded for playback in a browser.
 Be sure to have the latest CLI tools installed:
 - Python 3 (using 3.7.3 at the time of writing)
 - FFmpeg (libmp3lame, libvorbis)
-- ImageMagick (convert)
-- GraphicsMagick (ToDo: simplify to GraphicsMagick)
+- GraphicsMagick
 - GNU Make
 - Ghostscript
 

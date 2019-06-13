@@ -3,14 +3,14 @@ VENV_DIR = ../venv/bin/activate
 CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 
 %.done : %.jpg
-	convert -strip -geometry 400x -blur 0x20 -interlace JPEG -sampling-factor 4:2:0 -quality 5 $< $(DEST)/$(subst .jpg,,$<)-preload.jpg
-	convert -strip -geometry 400x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 95 $< $(DEST)/$(subst .jpg,,$<)-400w.jpg
-	convert -strip -geometry 600x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-600w.jpg
-	convert -strip -geometry 800x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-800w.jpg
-	convert -strip -geometry 1000x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-1000w.jpg
-	convert -strip -geometry 1500x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-1500w.jpg
-	convert -strip -geometry 2000x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-2000w.jpg
-	convert -strip -geometry 2500x -sharpen 0x0.5 -interlace JPEG -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-2500w.jpg
+	gm convert -strip -geometry 400x -blur 0x20 -interlace Line -sampling-factor 4:2:0 -quality 5 $< $(DEST)/$(subst .jpg,,$<)-preload.jpg
+	gm convert -strip -geometry 400x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 95 $< $(DEST)/$(subst .jpg,,$<)-400w.jpg
+	gm convert -strip -geometry 600x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-600w.jpg
+	gm convert -strip -geometry 800x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-800w.jpg
+	gm convert -strip -geometry 1000x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-1000w.jpg
+	gm convert -strip -geometry 1500x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-1500w.jpg
+	gm convert -strip -geometry 2000x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-2000w.jpg
+	gm convert -strip -geometry 2500x -sharpen 0x0.5 -interlace Line -sampling-factor 4:2:0 -define jpeg:dct-method=float -quality 90 $< $(DEST)/$(subst .jpg,,$<)-2500w.jpg
 	find $(DEST) -name "$(subst .jpg,,$<)*.jpg" -not -name "*©*" -exec exiftool -P -overwrite_original_in_place -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Photographer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' {} \;
 	touch $@
 
@@ -27,9 +27,9 @@ CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 %.done : %.mp4
 	# Preload Image
 	ffmpeg -y -i $< -ss 00:00:05.000 -vframes 1 $(DEST)/$(subst .mp4,,$<).jpg
-	convert -strip -geometry 800x -blur 0x20 -quality 5 $(DEST)/$(subst .mp4,,$<).jpg $(DEST)/$(subst .mp4,,$<)-preload.jpg
+	gm convert -strip -geometry 800x -blur 0x20 -quality 5 $(DEST)/$(subst .mp4,,$<).jpg $(DEST)/$(subst .mp4,,$<)-preload.jpg
 	rm -f $(DEST)/$(subst .mp4,,$<).jpg
-	# Make actual video conversion
+	# Actual video conversion
 	ffmpeg -y -i $< -vcodec libvpx -b:v 5120k -c:a libvorbis -ac 2 -b:a 192k -ar 44100 $(DEST)/$(subst .mp4,.webm,$<)
 	ffmpeg -y -i $< -c:v libtheora -c:a libvorbis -b:v 5120k -b:a 192k -ar 44100 $(DEST)/$(subst .mp4,.ogg,$<)
 	ffmpeg -y -i $< -vcodec h264 -vb 5120k -acodec aac -ab 192k -pix_fmt yuv420p $(DEST)/$(subst .mp4,.mp4,$<)
