@@ -13,8 +13,8 @@ def convert_txt_to_html_to_json(input_file, output_file):
     json_container = dict()
     with open(input_file, "rt") as file:
         # KISS way to preserve some whitespace in HTML
-        data = file.read().replace("\n", "<br>").replace("     ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").replace("    ",
-                                                                                                            "&nbsp;&nbsp;&nbsp;&nbsp;").replace(
+        data = file.read().replace("\n", "<br />").replace("     ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").replace("    ",
+                                                                                                              "&nbsp;&nbsp;&nbsp;&nbsp;").replace(
             "   ", "&nbsp;&nbsp;&nbsp;")
         json_container['text'] = data
     try:
