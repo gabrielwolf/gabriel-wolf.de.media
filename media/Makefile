@@ -83,12 +83,14 @@ pdf: $(pdfdone)
 nospaces:
 	rename -v 's/ /XX/g' *\ * &
 	rename -v 's/ /XX/g' $(DEST)/*\ * &
+	sleep 1
 
 # After Make is done, rename files back to having spaces
 .PHONY: yesspaces
 yesspaces:
 	rename -v 's/XX/ /g' * &
 	rename -v 's/XX/ /g' $(DEST)/* &
+	sleep 1
 
 .PHONY: chmod
 chmod:
