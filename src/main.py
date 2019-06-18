@@ -87,6 +87,7 @@ def sane_file_naming_schema(files):
                     file_data["datetime"] = str(datetime.strptime(str(parts[0] + "_" + parts[1]), "%Y-%m-%d_%H-%M-%S"))
                     file_data["title"] = parts[2]
                 except ValueError:
+                    print("Invalid date/time:   ", file)
                     return False
             file_data["extension"] = extension.strip(".")
             file_data["url"] = file
