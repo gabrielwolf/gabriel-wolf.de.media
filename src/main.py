@@ -70,6 +70,7 @@ def sane_file_naming_schema(files):
             parts = filename.split("_")
             if len(parts) == 1:
                 # not a single field
+                print("No valid scheme:   ", file)
                 return False
             if len(parts) > 1:
                 # see if first field is a valid date
