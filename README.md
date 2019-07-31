@@ -1,6 +1,4 @@
-# I rule my data. I, my self and only I.
-
-## Tools to generate web ready versions of media files
+# Tools to generate web ready versions of media files
 
 *Tool 1* checks naming of files according to a convention, and generates a JSON
 with info about all files in dir.   
