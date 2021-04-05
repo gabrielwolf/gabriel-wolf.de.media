@@ -14,6 +14,18 @@ CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 	find $(DEST) -name "$(subst .jpg,,$<)*.jpg" -not -name "*©*" -exec exiftool -P -overwrite_original_in_place -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Photographer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' {} \;
 	touch $@
 
+%.done : %.png
+	gm convert -strip -geometry 400x -blur 0x20 -interlace Line -sampling-factor 4:2:0 -quality 5 $< $(DEST)/$(subst .png,,$<)-preload.jpg
+	gm convert -strip -geometry 400x -sharpen 0x0.5 -quality 95 $< $(DEST)/$(subst .png,,$<)-400w.png
+	gm convert -strip -geometry 600x -sharpen 0x0.5 -quality 90 $< $(DEST)/$(subst .png,,$<)-600w.png
+	gm convert -strip -geometry 800x -sharpen 0x0.5 -quality 90 $< $(DEST)/$(subst .png,,$<)-800w.png
+	gm convert -strip -geometry 1000x -sharpen 0x0.5 -quality 90 $< $(DEST)/$(subst .png,,$<)-1000w.png
+	gm convert -strip -geometry 1500x -sharpen 0x0.5 -quality 90 $< $(DEST)/$(subst .png,,$<)-1500w.png
+	gm convert -strip -geometry 2000x -sharpen 0x0.5 -quality 90 $< $(DEST)/$(subst .png,,$<)-2000w.png
+	gm convert -strip -geometry 2500x -sharpen 0x0.5 -quality 90 $< $(DEST)/$(subst .png,,$<)-2500w.png
+	find $(DEST) -name "$(subst .png,,$<)*.png" -not -name "*©*" -exec exiftool -P -overwrite_original_in_place -OwnerName='Gabriel Wolf' -IFD0:Artist='Gabriel Wolf' -IPTC:By-line='Gabriel Wolf' -XMP-dc:Creator='Gabriel Wolf' -IPTC:By-lineTitle='Photographer' -IPTC:Contact='email: info@gabriel-wolf.de; website: https://gabriel-wolf.de' -XMP-iptcCore:CreatorWorkURL='https://gabriel-wolf.de' -d %Y -IFD0:Copyright='Creative Commons CC-BY 4.0' -d %Y -IPTC:CopyrightNotice='https://creativecommons.org/licenses/by/4.0/deed.de' -d %Y -XMP-dc:Rights='Creative Commons CC-BY 4.0' {} \;
+	touch $@
+
 %.done : %.mp3
 	ffmpeg -i $< -metadata originator= -metadata encoded_by= -metadata encoder_settings= -c:v copy -c:a copy $(DEST)/$<
 	touch $@
@@ -52,6 +64,9 @@ CONVERT_TXT_TO_HTML_TO_JSON = ../src/convert_txt_to_html_to_json.py
 jpg = $(shell ls *.jpg)
 jpgdone = $(subst .jpg,.done,$(jpg))
 
+png = $(shell ls *.png)
+pngdone = $(subst .png,.done,$(png))
+
 mp3 = $(shell ls *.mp3)
 mp3done = $(subst .mp3,.done,$(mp3))
 
@@ -67,11 +82,12 @@ txtdone = $(subst .txt,.done,$(txt))
 pdf = $(shell ls *.pdf)
 pdfdone = $(subst .pdf,.done,$(pdf))
 
-donefiles = $(jpgdone) $(mp3done) $(wavdone) $(mp4done) $(txtdone) $(pdfdone)
+donefiles = $(jpgdone) $(pngdone) $(mp3done) $(wavdone) $(mp4done) $(txtdone) $(pdfdone)
 
 all: $(donefiles)
 
 jpg: $(jpgdone)
+png: $(pngdone)
 mp3: $(mp3done)
 wav: $(wavdone)
 mp4: $(mp4done)
