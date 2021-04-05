@@ -61,7 +61,7 @@ def sane_file_naming_schema(files):
         file_data = {}
         filename, extension = os.path.splitext(file)
         if not extension == ".done":
-            if extension == ".jpg":
+            if extension == ".jpg" or extension == ".png":
                 argument = Path(media_files_directory + file)
                 if argument.is_file():
                     width, height = read_image_size(argument)
